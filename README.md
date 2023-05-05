@@ -15,6 +15,7 @@ npm install @sapientpro/nestjs-graphql-eager-load --save
 ```
 
 Install the package using npm:
+
 ```
 yarn add @sapientpro/nestjs-graphql-eager-load
 ```
@@ -96,7 +97,8 @@ meta(@Root() article: Article): Promise<ArticleEntity> {
 
 ### Arguments
 
-If you need use arguments to load relations. In this case you can use third argument in your constraint function.
+If you need to use arguments to load relations. You can use the third argument in your constraint function in this case.
+
 ```typescript
 @EagerLoad({
   comments: (builder, {}, args) => {
@@ -112,7 +114,9 @@ comments(@Root() article: Article, @Args() args: CommentsArgs): CommentEntity[] 
 ```
 
 ### GraphQL context
-If you need to use context in your constraint function you can use fourth argument in your constraint function.
+
+If you need to use context in your constraint function, you can use the fourth argument in your constraint function.
+
 ```typescript
 @EagerLoad({
   comments: (builder, {}, args, context) => {
@@ -128,9 +132,11 @@ comments(@Root() article: Article, @Args() args: CommentsArgs): CommentEntity[] 
 ```
 
 ## Contributing
+
 Contributions are welcome! If you have any bug reports, feature requests, or patches, please [open an issue](https://github.com/sapientpro/nestjs-graphql-eager-load/issues) or create a [pull request](https://github.com/sapientpro/nestjs-graphql-eager-load/pulls).
 
 ## License
+
 This package is licensed under the [MIT License](https://github.com/sapientpro/nestjs-graphql-eager-load/blob/main/LICENSE).
 
 
