@@ -9,6 +9,7 @@ import {
 } from '@sapientpro/typeorm-eager-load';
 import {
   defaultFieldResolver,
+  getArgumentValues,
   GraphQLFieldConfig,
   GraphQLNonNull,
   GraphQLNullableType,
@@ -17,7 +18,6 @@ import {
   isWrappingType,
   Kind,
   SelectionSetNode,
-  StringValueNode,
 } from 'graphql';
 
 type Args = [Record<string, any>, any];
@@ -49,13 +49,7 @@ function addEagerLoad(objectType: GraphQLNonNull<any> | GraphQLNullableType, sel
     const field = fields[selection.name.value],
       eager = <RelationDefinitions<Args> | true | undefined>field.extensions.eager;
     if (!eager) return;
-
-    const args: Record<string, any> = Object.fromEntries(
-      selection.arguments?.map((arg) => [
-        arg.name.value,
-        arg.value.kind === Kind.VARIABLE ? context[arg.value.name.value] : (arg.value as StringValueNode).value,
-      ]) ?? [],
-    );
+    const args = getArgumentValues(field, selection, context.variableValues);
     if (eager === true) {
       addEagerLoad(field.type, selection.selectionSet, eagerContext, context);
     } else {
