@@ -1,3 +1,12 @@
+## [0.0.4](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.3...0.0.4) (2023-05-05)
+
+
+### Bug Fixes
+
+* Added arguments parsing ([b1e90e3](https://github.com/sapientpro/nestjs-graphql-eager-load/commit/b1e90e3bc5151eb6eef00655110f849b239c5fc9))
+
+
+
 ## [0.0.3](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.2...0.0.3) (2023-05-05)
 
 
