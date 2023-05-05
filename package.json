@@ -1,0 +1,69 @@
+{
+  "name": "@sapientpro/nestjs-graphql-eager-load",
+  "version": "0.0.1",
+  "description": "A powerful tool for optimizing database queries in your NestJS GraphQL App",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "author": {
+    "name": "Dmyto Kulyk",
+    "email": "dmytro.kulyk@sapient.prom"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sapientpro/nestjs-graphql-eager-load.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sapientpro/nestjs-graphql-eager-load/issues"
+  },
+  "homepage": "https://github.com/sapientpro/nestjs-graphql-eager-load",
+  "tags": [
+    "nestjs",
+    "graphql",
+    "orm",
+    "typescript",
+    "typeorm",
+    "eager-load"
+  ],
+  "engines": {
+    "node": ">= 12.9.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "node": {
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "prepare": "npm run compile",
+    "compile": "rimraf ./dist && tsc",
+    "watch": "./node_modules/.bin/tsc -w",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "conventional-changelog-angular": "^5.0.13",
+    "conventional-changelog-cli": "^2.2.2",
+    "rimraf": "^4.4.1",
+    "typeorm": "^0.3.15",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "@graphql-tools/utils": "^9.2.1",
+    "@nestjs/graphql": "^8.0.0 || ^9.0.0 || ^10.0.0",
+    "@sapientpro/typeorm-eager-load": ">=0.0.9",
+    "tslib": "^2.5.0"
+  },
+  "peerDependenciesMeta": {
+    "typeorm": {
+      "optional": false
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}
