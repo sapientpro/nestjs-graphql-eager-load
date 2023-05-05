@@ -71,7 +71,6 @@ export function eagerLoadSchemaTransformer(schema: GraphQLSchema) {
     [MapperKind.QUERY_ROOT_FIELD]: (fieldConfig) => {
       const resolve = fieldConfig.resolve || defaultFieldResolver;
       fieldConfig.resolve = async function (source, args, context, info) {
-        console.log(context);
         const value = await resolve(source, args, context, info);
         const eagerRelations: RelationDefinitions[] = [];
         addEagerLoad(fieldConfig.type, info.fieldNodes[0].selectionSet, {
