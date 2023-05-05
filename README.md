@@ -14,7 +14,7 @@ Install the package using npm:
 npm install @sapientpro/nestjs-graphql-eager-load --save
 ```
 
-Install the package using npm:
+Install the package using yarn:
 
 ```
 yarn add @sapientpro/nestjs-graphql-eager-load
