@@ -1,27 +1,36 @@
 import { MapperKind, mapSchema } from '@graphql-tools/utils';
 import { Extensions } from '@nestjs/graphql';
-import { EagerContext, eagerLoad, EagerLoadClosure, flatRelations, RelationDefinitions } from '@sapientpro/typeorm-eager-load';
+import {
+  EagerContext,
+  eagerLoad,
+  EagerLoadClosure,
+  flatRelations,
+  RelationDefinitions
+} from '@sapientpro/typeorm-eager-load';
 import {
   defaultFieldResolver,
+  GraphQLFieldConfig,
   GraphQLNonNull,
   GraphQLNullableType,
   GraphQLObjectType,
   GraphQLSchema,
   isWrappingType,
   Kind,
-  SelectionSetNode, StringValueNode,
+  SelectionSetNode,
+  StringValueNode,
 } from 'graphql';
 
 type Args = [Record<string, any>, any];
+
 export function EagerLoad(passThrough: true): MethodDecorator & PropertyDecorator;
 export function EagerLoad(constrain: EagerLoadClosure<Args>): MethodDecorator & PropertyDecorator
 export function EagerLoad(relations?: RelationDefinitions<Args>): MethodDecorator & PropertyDecorator;
 export function EagerLoad(eager?: RelationDefinitions<Args> | EagerLoadClosure<Args> | true): MethodDecorator & PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
     if (eager instanceof Function) {
-      eager = { [propertyKey]: eager };
+      eager = {[propertyKey]: eager};
     }
-    Extensions({ eager: eager ?? [propertyKey] })(target, propertyKey);
+    Extensions({eager: eager ?? [propertyKey]})(target, propertyKey);
   };
 }
 
@@ -66,26 +75,29 @@ function addEagerLoad(objectType: GraphQLNonNull<any> | GraphQLNullableType, sel
   }
 }
 
+function schemaTransformer(fieldConfig: GraphQLFieldConfig<any, any>) {
+  const resolve = fieldConfig.resolve || defaultFieldResolver;
+  fieldConfig.resolve = async function (source, args, context, info) {
+    const value = await resolve(source, args, context, info);
+    const eagerRelations: RelationDefinitions[] = [];
+    addEagerLoad(fieldConfig.type, info.fieldNodes[0].selectionSet, {
+      filter: () => void 0,
+      lateral: () => void 0,
+      loadWith: (relations) => {
+        eagerRelations.push(relations);
+      },
+    }, context);
+    if (eagerRelations.length) {
+      await eagerLoad(value as object, eagerRelations);
+    }
+    return value;
+  };
+  return fieldConfig;
+}
+
 export function eagerLoadSchemaTransformer(schema: GraphQLSchema) {
   return mapSchema(schema, {
-    [MapperKind.QUERY_ROOT_FIELD]: (fieldConfig) => {
-      const resolve = fieldConfig.resolve || defaultFieldResolver;
-      fieldConfig.resolve = async function (source, args, context, info) {
-        const value = await resolve(source, args, context, info);
-        const eagerRelations: RelationDefinitions[] = [];
-        addEagerLoad(fieldConfig.type, info.fieldNodes[0].selectionSet, {
-          filter: () => void 0,
-          lateral: () => void 0,
-          loadWith: (relations) => {
-            eagerRelations.push(relations);
-          },
-        }, context);
-        if (eagerRelations.length) {
-          await eagerLoad(value as object, eagerRelations);
-        }
-        return value;
-      };
-      return fieldConfig;
-    },
+    [MapperKind.MUTATION_ROOT_FIELD]: schemaTransformer,
+    [MapperKind.QUERY_ROOT_FIELD]: schemaTransformer,
   });
 }
