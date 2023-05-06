@@ -45,7 +45,7 @@ import { EagerLoad } from '@sapientpro/nestjs-graphql-eager-load';
 Then, use it to load entity relations:
 
 ```typescript
-import { EagerLoad } from "./index";
+import { EagerLoad } from "@sapientpro/nestjs-graphql-eager-load";
 
 @ObjectType()
 class Article {
@@ -53,9 +53,9 @@ class Article {
   @EagerLoad()
   comments: Comment[];
 
-  @Resolver(() => Tag)
+  @Resolver(() => [Tag])
   @EagerLoad(['tags'])
-  tags(@Root() article: Article): Promise<TagEntity[]> {
+  tags(@Root() article: Article): TagEntity[] {
     return article.tags;
   }
 }
@@ -90,7 +90,7 @@ If you have a nested model with same entity you can specify passTrough option to
 ```typescript
 @Resolver(() => ArticleMeta)
 @EagerLoad(true)
-meta(@Root() article: Article): Promise<ArticleEntity> {
+meta(@Root() article: ArticleEntity): ArticleEntity {
   return article;
 }
 ```
