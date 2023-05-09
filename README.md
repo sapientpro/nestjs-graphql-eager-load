@@ -103,7 +103,7 @@ If you need to use arguments to load relations. You can use the third argument i
 @EagerLoad({
   comments: (builder, {}, args) => {
     if(args.newerThan) {
-      builder.where('comments.createdAt >= :date', {date: args.date});
+      builder.where('comments.createdAt >= :date', {date: args.newerThan});
     }
   }
 })
