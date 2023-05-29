@@ -80,6 +80,7 @@ function schemaTransformer(fieldConfig: GraphQLFieldConfig<any, any>) {
       loadWith: (relations) => {
         eagerRelations.push(relations);
       },
+      loadRaw: () => void 0,
     }, context);
     if (eagerRelations.length) {
       await eagerLoad(value as object, eagerRelations);
