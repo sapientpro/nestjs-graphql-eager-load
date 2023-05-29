@@ -1,3 +1,11 @@
+## [0.0.6](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.5...0.0.6) (2023-05-29)
+
+
+### Bug Fixes
+
+* Added loadRaw for an initial context ([5bda108](https://github.com/sapientpro/nestjs-graphql-eager-load/commit/5bda108541350f312c99b1ec6435077d85a8b8c4))
+
+
 ## [0.0.4](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.3...0.0.4) (2023-05-05)
 
 
