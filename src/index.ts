@@ -34,6 +34,12 @@ export function EagerLoad(eager?: RelationDefinitions<Args> | EagerLoadClosure<A
   };
 }
 
+export function EagerLoadEntry(): MethodDecorator & PropertyDecorator {
+  return function (target: object, propertyKey: string | symbol) {
+    Extensions({ eagerEntry: true })(target, propertyKey);
+  };
+}
+
 function addEagerLoad(objectType: GraphQLNonNull<any> | GraphQLNullableType, selectionSet: SelectionSetNode | undefined, eagerContext: EagerContext, context: any) {
   if (selectionSet?.kind !== Kind.SELECTION_SET) return;
   while (isWrappingType(objectType)) {
@@ -94,5 +100,11 @@ export function eagerLoadSchemaTransformer(schema: GraphQLSchema) {
   return mapSchema(schema, {
     [MapperKind.MUTATION_ROOT_FIELD]: schemaTransformer,
     [MapperKind.QUERY_ROOT_FIELD]: schemaTransformer,
+    [MapperKind.OBJECT_FIELD]: (fieldConfig: GraphQLFieldConfig<any, any>) => {
+      if(fieldConfig.extensions?.eagerEntry) {
+        return schemaTransformer(fieldConfig);
+      }
+      return fieldConfig;
+    },
   });
 }
