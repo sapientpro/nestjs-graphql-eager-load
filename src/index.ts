@@ -5,7 +5,7 @@ import {
   eagerLoad,
   EagerLoadClosure,
   flatRelations,
-  RelationDefinitions
+  RelationDefinitions,
 } from '@sapientpro/typeorm-eager-load';
 import {
   defaultFieldResolver,
@@ -28,15 +28,15 @@ export function EagerLoad(relations?: RelationDefinitions<Args>): MethodDecorato
 export function EagerLoad(eager?: RelationDefinitions<Args> | EagerLoadClosure<Args> | true): MethodDecorator & PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
     if (eager instanceof Function) {
-      eager = {[propertyKey]: eager};
+      eager = { [propertyKey]: eager };
     }
-    Extensions({eager: eager ?? [propertyKey]})(target, propertyKey);
+    Extensions({ eager: eager ?? [propertyKey] })(target, propertyKey);
   };
 }
 
-export function EagerLoadEntry(): MethodDecorator & PropertyDecorator {
+export function EagerLoadEntry(entry?: string): MethodDecorator & PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
-    Extensions({ eagerEntry: true })(target, propertyKey);
+    Extensions({ eagerEntry: entry ?? true })(target, propertyKey);
   };
 }
 
@@ -75,34 +75,36 @@ function addEagerLoad(objectType: GraphQLNonNull<any> | GraphQLNullableType, sel
   }
 }
 
-function schemaTransformer(fieldConfig: GraphQLFieldConfig<any, any>) {
-  const resolve = fieldConfig.resolve || defaultFieldResolver;
-  fieldConfig.resolve = async function (source, args, context, info) {
-    const value = await resolve(source, args, context, info);
-    const eagerRelations: RelationDefinitions[] = [];
-    addEagerLoad(fieldConfig.type, info.fieldNodes[0].selectionSet, {
-      filter: () => void 0,
-      lateral: () => void 0,
-      loadWith: (relations) => {
-        eagerRelations.push(relations);
-      },
-      loadRaw: () => void 0,
-    }, context);
-    if (eagerRelations.length) {
-      await eagerLoad(value as object, eagerRelations);
-    }
-    return value;
-  };
-  return fieldConfig;
+function getSchemaTransformer(entry?:string|true) {
+  return function (fieldConfig: GraphQLFieldConfig<any, any>) {
+    const resolve = fieldConfig.resolve || defaultFieldResolver;
+    fieldConfig.resolve = async function (source, args, context, info) {
+      const value = <any>await resolve(source, args, context, info);
+      const eagerRelations: RelationDefinitions[] = [];
+      addEagerLoad(fieldConfig.type, info.fieldNodes[0].selectionSet, {
+        filter: () => void 0,
+        lateral: () => void 0,
+        loadWith: (relations) => {
+          eagerRelations.push(relations);
+        },
+        loadRaw: () => void 0,
+      }, context);
+      if (eagerRelations.length) {
+        await eagerLoad(typeof entry === 'string' ? value[entry] : value, eagerRelations);
+      }
+      return value;
+    };
+    return fieldConfig;
+  }
 }
 
 export function eagerLoadSchemaTransformer(schema: GraphQLSchema) {
   return mapSchema(schema, {
-    [MapperKind.MUTATION_ROOT_FIELD]: schemaTransformer,
-    [MapperKind.QUERY_ROOT_FIELD]: schemaTransformer,
+    [MapperKind.MUTATION_ROOT_FIELD]: getSchemaTransformer(),
+    [MapperKind.QUERY_ROOT_FIELD]: getSchemaTransformer(),
     [MapperKind.OBJECT_FIELD]: (fieldConfig: GraphQLFieldConfig<any, any>) => {
-      if(fieldConfig.extensions?.eagerEntry) {
-        return schemaTransformer(fieldConfig);
+      if (fieldConfig.extensions?.eagerEntry) {
+        return getSchemaTransformer(fieldConfig.extensions?.eagerEntry as string)(fieldConfig);
       }
       return fieldConfig;
     },

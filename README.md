@@ -53,7 +53,7 @@ class Article {
   @EagerLoad()
   comments: Comment[];
 
-  @Resolver(() => [Tag])
+  @ResolveField(() => [Tag])
   @EagerLoad(['tags'])
   tags(@Root() article: Article): TagEntity[] {
     return article.tags;
@@ -88,8 +88,8 @@ comments: Comment[];
 If you have a nested model with same entity you can specify passTrough option to pass the processing to the nested model.
 
 ```typescript
-@Resolver(() => ArticleMeta)
 @EagerLoad(true)
+@ResolveField(() => ArticleMeta)
 meta(@Root() article: ArticleEntity): ArticleEntity {
   return article;
 }
@@ -107,7 +107,7 @@ If you need to use arguments to load relations. You can use the third argument i
     }
   }
 })
-@Resolver(() => [Comment])
+@ResolveFioeld(() => [Comment])
 comments(@Root() article: Article, @Args() args: CommentsArgs): CommentEntity[] {
   return article.comments;
 }
@@ -125,11 +125,36 @@ If you need to use context in your constraint function, you can use the fourth a
       }
   }
 })
-@Resolver(() => [Comment])
+@ResolveField(() => [Comment])
 comments(@Root() article: Article, @Args() args: CommentsArgs): CommentEntity[] {
   return article.comments;
 }
 ```
+
+### EagerLoadEntry
+
+If you have a field resolver that is not a query or mutation, you can mark it as LoadEagerEntry to enable eager load processing
+    
+```typescript
+@EagerLoadEntry()
+@ResolveField(() => [Comment])
+comments(): CommentEntity[] {
+  return commentsRepository.findAll();
+}
+```
+
+also you can specify field to use as entity entry
+
+```typescript
+@EagerLoadEntry('nodes')
+@ResolveField(() => PaginatedComment)
+comments(): CommentEntity[] {
+  return {
+    nodes: commentsRepository.findAll()
+  };
+}
+```
+
 
 ## Contributing
 
