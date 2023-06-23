@@ -1,3 +1,12 @@
+## [0.0.8](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.7...0.0.8) (2023-06-23)
+
+
+### Features
+
+* Added custom field entry to EagerLoadEntry ([ef884a5](https://github.com/sapientpro/nestjs-graphql-eager-load/commit/ef884a501f3a02b7b26179599a442eef54109468))
+
+
+
 ## [0.0.7](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.5...0.0.7) (2023-06-18)
 
 
