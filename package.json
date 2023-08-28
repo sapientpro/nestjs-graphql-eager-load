@@ -45,7 +45,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 1"
   },
   "devDependencies": {
-    "@types/node": "^18.13.0",
+    "@types/node": "^20.5.7",
     "conventional-changelog-angular": "^5.0.13",
     "conventional-changelog-cli": "^2.2.2",
     "rimraf": "^5.0.1",
