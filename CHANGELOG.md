@@ -1,3 +1,12 @@
+## [0.0.12](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.11...0.0.12) (2023-09-10)
+
+
+### Features
+
+* Allow use custom transformer for EagerLoadEntry ([d64a51b](https://github.com/sapientpro/nestjs-graphql-eager-load/commit/d64a51bd7f0c32e14d674c9882b0f023ea2e023c))
+
+
+
 ## [0.0.11](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.7...0.0.11) (2023-09-10)
 
 
