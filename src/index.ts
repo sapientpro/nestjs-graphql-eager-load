@@ -34,7 +34,7 @@ export function EagerLoad(eager?: RelationDefinitions<Args> | EagerLoadClosure<A
   };
 }
 
-export function EagerLoadEntry(entry?: string): MethodDecorator & PropertyDecorator {
+export function EagerLoadEntry(entry?: ((entry: any) => any[]) | string): MethodDecorator & PropertyDecorator {
   return function (target: object, propertyKey: string | symbol) {
     Extensions({eagerEntry: entry ?? true})(target, propertyKey);
   };
@@ -75,7 +75,7 @@ function addEagerLoad(objectType: GraphQLNonNull<any> | GraphQLNullableType, sel
   }
 }
 
-function getSchemaTransformer(entry?: string | true) {
+function getSchemaTransformer(entry?: string | ((entry: any) => any[]) | true) {
   return function (fieldConfig: GraphQLFieldConfig<any, any>) {
     const resolve = fieldConfig.resolve || defaultFieldResolver;
     fieldConfig.resolve = async function (source, args, context, info) {
@@ -90,12 +90,15 @@ function getSchemaTransformer(entry?: string | true) {
         loadRaw: () => void 0,
       }, context, info);
       if (eagerRelations.length) {
-        await eagerLoad(typeof entry === 'string' ? value[entry] : value, eagerRelations);
+        await eagerLoad(
+          entry instanceof Function ? entry(value) : (typeof entry === 'string' ? value[entry] : value),
+          eagerRelations,
+        );
       }
       return value;
     };
     return fieldConfig;
-  }
+  };
 }
 
 export function eagerLoadSchemaTransformer(schema: GraphQLSchema) {
