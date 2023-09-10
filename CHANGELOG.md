@@ -1,3 +1,12 @@
+## [0.0.11](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.7...0.0.11) (2023-09-10)
+
+
+### Features
+
+* Added support EagerLoadEntry on query root ([7b7ff6a](https://github.com/sapientpro/nestjs-graphql-eager-load/commit/7b7ff6a9f3ba86e708ed0de31279af83d678dc3b))
+
+
+
 ## [0.0.9](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.7...0.0.9) (2023-07-06)
 
 
