@@ -100,8 +100,12 @@ function getSchemaTransformer(entry?: string | true) {
 
 export function eagerLoadSchemaTransformer(schema: GraphQLSchema) {
   return mapSchema(schema, {
-    [MapperKind.MUTATION_ROOT_FIELD]: getSchemaTransformer(),
-    [MapperKind.QUERY_ROOT_FIELD]: getSchemaTransformer(),
+    [MapperKind.MUTATION_ROOT_FIELD]: (fieldConfig: GraphQLFieldConfig<any, any>) => {
+      return getSchemaTransformer(fieldConfig.extensions?.eagerEntry as string)(fieldConfig);
+    },
+    [MapperKind.QUERY_ROOT_FIELD]: (fieldConfig: GraphQLFieldConfig<any, any>) => {
+      return getSchemaTransformer(fieldConfig.extensions?.eagerEntry as string)(fieldConfig);
+    },
     [MapperKind.OBJECT_FIELD]: (fieldConfig: GraphQLFieldConfig<any, any>) => {
       if (fieldConfig.extensions?.eagerEntry) {
         return getSchemaTransformer(fieldConfig.extensions?.eagerEntry as string)(fieldConfig);

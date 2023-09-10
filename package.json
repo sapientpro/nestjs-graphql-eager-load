@@ -1,6 +1,6 @@
 {
   "name": "@sapientpro/nestjs-graphql-eager-load",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A powerful tool for optimizing database queries in your NestJS GraphQL App",
   "license": "MIT",
   "readmeFilename": "README.md",
