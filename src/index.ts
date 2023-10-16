@@ -49,7 +49,12 @@ function addEagerLoad(objectType: GraphQLNonNull<any> | GraphQLNullableType, sel
 
   const relations: RelationDefinitions[] = [];
   const fields = objectType.getFields();
-  selectionSet.selections.forEach((selection) => {
+  const scan = (selectionSet: SelectionSetNode)=> selectionSet.selections.forEach((selection) => {
+    if(selection.kind === Kind.FRAGMENT_SPREAD) {
+      const fragment = info.fragments[selection.name.value];
+      scan(fragment.selectionSet);
+      return;
+    }
     if (selection.kind !== Kind.FIELD) return;
     if (!(selection.name.value in fields)) return;
     const field = fields[selection.name.value],
@@ -69,6 +74,7 @@ function addEagerLoad(objectType: GraphQLNonNull<any> | GraphQLNullableType, sel
       });
     }
   });
+  scan(selectionSet);
 
   if (relations.length) {
     eagerContext.loadWith(relations);
