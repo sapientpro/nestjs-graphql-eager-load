@@ -1,3 +1,12 @@
+## [0.0.13](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.12...0.0.13) (2023-10-16)
+
+
+### Features
+
+* Added support of fragments ([e39b232](https://github.com/sapientpro/nestjs-graphql-eager-load/commit/e39b2327fbd57a4c26ddf19a089ff9c060a7d85a))
+
+
+
 ## [0.0.12](https://github.com/sapientpro/nestjs-graphql-eager-load/compare/0.0.11...0.0.12) (2023-09-10)
 
 
