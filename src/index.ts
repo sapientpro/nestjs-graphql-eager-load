@@ -94,6 +94,7 @@ function getSchemaTransformer(entry?: string | ((entry: any) => any[]) | true) {
           eagerRelations.push(relations);
         },
         loadRaw: () => void 0,
+        additionalModels: () => void 0,
       }, context, info);
       if (eagerRelations.length) {
         await eagerLoad(
